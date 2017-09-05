@@ -14,10 +14,12 @@ client.connect();
 client.query(`CREATE TABLE IF NOT EXISTS items (
                 item_id serial,
                 name text,
-                estprice numeric
+                estprice numeric,
+                PRIMARY KEY (item_id)
               );
               CREATE TABLE IF NOT EXISTS lists (
-                list_id serial
+                list_id serial,
+                PRIMARY KEY (list_id)
               );
               CREATE TABLE IF NOT EXISTS list_items (
                 list_id integer,
@@ -46,6 +48,21 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 const client = new Client();
                 client.connect();
                 client.query(`INSERT INTO items (name, estprice) VALUES ("${name}", ${estprice})`)
+                    .then((dbRes) => {
+                        res.json(dbRes.rows);
+                        client.end();
+                    })
+                    .catch((err) => {
+                        res.json(err);
+                        client.end();
+                    });
+            });
+
+        app.route('/items/drop')
+            .get((req, res) => {
+                const client = new Client();
+                client.connect();
+                client.query(`DROP TABLE items;`)
                     .then((dbRes) => {
                         res.json(dbRes.rows);
                         client.end();
