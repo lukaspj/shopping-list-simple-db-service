@@ -26,6 +26,7 @@ client.end();
 
 app.route('/items')
     .get((req, res) =>{
+        const client = new Client();
         client.connect();
         client.query('SELECT * FROM items')
             .then((dbRes) => {
