@@ -20,23 +20,23 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 item_id integer,
                 amount numeric,
                 notes text
-              )`);
+              )`)
+    .then(() => {
+        client.end();
 
-client.end();
-
-app.route('/items')
-    .get((req, res) =>{
-        const client = new Client();
-        client.connect();
-        client.query('SELECT * FROM items')
-            .then((dbRes) => {
-                res.json(dbRes.rows);
-                client.end();
+        app.route('/items')
+            .get((req, res) =>{
+                const client = new Client();
+                client.connect();
+                client.query('SELECT * FROM items')
+                    .then((dbRes) => {
+                        res.json(dbRes.rows);
+                        client.end();
+                    });
             });
+
+        app.listen(port);
+
+        console.log(`Started listening on ${port}`);
     });
 
-
-
-app.listen(port);
-
-console.log(`Started listening on ${port}`);
