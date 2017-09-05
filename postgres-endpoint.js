@@ -49,6 +49,10 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                     .then((dbRes) => {
                         res.json(dbRes.rows);
                         client.end();
+                    })
+                    .catch((err) => {
+                        res.json(err);
+                        client.end();
                     });
             });
 
