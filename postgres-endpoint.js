@@ -47,7 +47,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 var estprice = req.body.estprice;
                 const client = new Client();
                 client.connect();
-                client.query(`INSERT INTO items (name, estprice) VALUES ("${name}", ${estprice})`)
+                client.query(`INSERT INTO items VALUES (DEFAULT, "${name}", ${estprice})`)
                     .then((dbRes) => {
                         res.json(dbRes.rows);
                         client.end();
