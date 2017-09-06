@@ -20,13 +20,7 @@ const client = new Client();
 
 client.connect();
 
-app.route('/reset')
-    .get((req, res) =>{
-        const client = new Client();
-        client.connect();
-        client.query(`DROP TABLE items;
-                      DROP TABLE lists;
-                      DROP TABLE list_items;
+const createTablesStmt = `
                       CREATE TABLE IF NOT EXISTS items (
                         item_id serial,
                         name text,
@@ -35,6 +29,7 @@ app.route('/reset')
                       );
                       CREATE TABLE IF NOT EXISTS lists (
                         list_id serial,
+                        status integer DEFAULT 0,
                         PRIMARY KEY (list_id)
                       );
                       CREATE TABLE IF NOT EXISTS list_items (
@@ -43,31 +38,36 @@ app.route('/reset')
                         item_id integer,
                         amount numeric,
                         notes text
-                      )`)
+                      )`;
+
+app.route('/reset')
+    .get((req, res) =>{
+        const client = new Client();
+        client.connect();
+        client.query(`DROP TABLE items;
+                      DROP TABLE lists;
+                      DROP TABLE list_items;` + createTablesStmt)
             .then(() => {
                 client.end();
-                res.send("OK");
+                res.send('OK');
             })
             .catch(err => console.log(err));
     });
 
-client.query(`CREATE TABLE IF NOT EXISTS items (
-                item_id serial,
-                name text,
-                estprice numeric,
-                PRIMARY KEY (item_id)
-              );
-              CREATE TABLE IF NOT EXISTS lists (
-                list_id serial,
-                PRIMARY KEY (list_id)
-              );
-              CREATE TABLE IF NOT EXISTS list_items (
-                list_item_id serial,
-                list_id integer,
-                item_id integer,
-                amount numeric,
-                notes text
-              )`)
+app.route('/migrate')
+    .get((req, res) => {
+        const client = new Client();
+        client.connect();
+        client.query(`
+            ALTER TABLE lists ADD COLUMN status integer DEFAULT 0;
+        `)
+            .then(() => {
+                client.end();
+                res.send('OK');
+            });
+    });
+
+client.query(createTablesStmt)
     .then(() => {
         client.end();
 
