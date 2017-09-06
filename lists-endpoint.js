@@ -10,6 +10,7 @@ module.exports = {
                     .then((dbRes) => {
                         res.json(dbRes.rows);
                         client.end();
+                        res.end();
                     });
             });
     },
@@ -22,10 +23,12 @@ module.exports = {
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
+                        res.end();
                     })
                     .catch((err) => {
                         res.json(err);
                         client.end();
+                        res.end();
                     });
             });
     },
@@ -39,12 +42,35 @@ module.exports = {
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
+                        res.end();
                     })
                     .catch((err) => {
                         res.json(err);
                         console.log(req.body);
                         client.end();
+                        res.end();
                     });
+            });
+    },
+    update: (app) => {
+        app.route('/lists/update')
+            .post((req, res) => {
+               var id = req.body.id;
+               var status = req.body.status;
+               const client = new Client();
+               client.connect();
+               client.query(`UPDATE lists SET status=${status} WHERE id=${id};`)
+                   .then(() => {
+                        res.send("success");
+                        client.end();
+                       res.end();
+                   })
+                   .catch(err => {
+                       res.json(err);
+                       console.log(req.body);
+                       client.end();
+                       res.end();
+                   })
             });
     }
 };

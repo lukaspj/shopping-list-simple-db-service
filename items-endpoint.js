@@ -10,6 +10,7 @@ module.exports = {
                     .then((dbRes) => {
                         res.json(dbRes.rows);
                         client.end();
+                        res.end();
                     });
             });
     },
@@ -24,11 +25,13 @@ module.exports = {
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
+                        res.end();
                     })
                     .catch((err) => {
                         res.json(err);
                         console.log(req.body);
                         client.end();
+                        res.end();
                     });
             });
     },
@@ -42,11 +45,13 @@ module.exports = {
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
+                        res.end();
                     })
                     .catch((err) => {
                         res.json(err);
                         console.log(req.body);
                         client.end();
+                        res.end();
                     });
             });
     }

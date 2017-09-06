@@ -83,6 +83,7 @@ client.query(createTablesStmt)
         ListsEndpoint.list(app);
         ListsEndpoint.create(app);
         ListsEndpoint.delete(app);
+        ListsEndpoint.update(app);
 
         app.listen(port);
 
