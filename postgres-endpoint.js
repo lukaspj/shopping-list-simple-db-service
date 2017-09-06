@@ -11,6 +11,10 @@ app.use((req, res, next) => {
     next();
 });
 
+const ListsEndpoint = require('lists-endpoint');
+const ItemsEndpoint = require('items-endpoint');
+const ListItemsEndpoint = require('list-items-endpoint');
+
 const { Client } = require('pg');
 const client = new Client();
 
@@ -35,118 +39,18 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
     .then(() => {
         client.end();
 
-        app.route('/items')
-            .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query('SELECT * FROM items')
-                    .then((dbRes) => {
-                        res.json(dbRes.rows);
-                        client.end();
-                    });
-            });
+        ItemsEndpoint.list(app);
+        ItemsEndpoint.create(app);
+        ItemsEndpoint.delete(app);
 
-        app.route('/lists')
-            .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query('SELECT * FROM lists')
-                    .then((dbRes) => {
-                        res.json(dbRes.rows);
-                        client.end();
-                    });
-            });
+        ListItemsEndpoint.list(app);
+        ListItemsEndpoint.get(app);
+        ListItemsEndpoint.create(app);
+        ListItemsEndpoint.delete(app);
 
-        app.route('/list_items')
-            .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query('SELECT * FROM list_items')
-                    .then((dbRes) => {
-                        res.json(dbRes.rows);
-                        client.end();
-                    });
-            });
-
-        app.route('/list_items/:id')
-            .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query(`SELECT * FROM list_items WHERE list_id = ${req.params.id}`)
-                    .then((dbRes) => {
-                        res.json(dbRes.rows);
-                        client.end();
-                    });
-            });
-
-        app.route('/items/create')
-            .post((req, res) => {
-                var name = req.body.name;
-                var estprice = req.body.estprice;
-                const client = new Client();
-                client.connect();
-                client.query(`INSERT INTO items VALUES (DEFAULT, '${name}', ${estprice})`)
-                    .then((dbRes) => {
-                        res.send("success");
-                        client.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        console.log(req.body);
-                        client.end();
-                    });
-            });
-
-        app.route('/items/delete')
-            .post((req, res) => {
-                var id = req.body.id;
-                const client = new Client();
-                client.connect();
-                client.query(`DELETE FROM items WHERE item_id=${id}`)
-                    .then((dbRes) => {
-                        res.send("success");
-                        client.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        console.log(req.body);
-                        client.end();
-                    });
-            });
-
-        app.route('/lists/create')
-            .post((req, res) => {
-                const client = new Client();
-                client.connect();
-                client.query(`INSERT INTO lists VALUES (DEFAULT)`)
-                    .then((dbRes) => {
-                        res.send("success");
-                        client.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        client.end();
-                    });
-            });
-
-        app.route('/list_items/create')
-            .post((req, res) => {
-                var list_id = req.body.list_id;
-                var item_id = req.body.item_id;
-                var amount = req.body.amount;
-                var notes = req.body.notes;
-                const client = new Client();
-                client.connect();
-                client.query(`INSERT INTO list_items VALUES (${list_id}, ${item_id}, ${amount}, '${notes}')`)
-                    .then((dbRes) => {
-                        res.send("success");
-                        client.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        client.end();
-                    });
-            });
+        ListsEndpoint.list(app);
+        ListsEndpoint.create(app);
+        ListsEndpoint.delete(app);
 
         app.listen(port);
 
