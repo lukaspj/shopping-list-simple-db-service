@@ -92,6 +92,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                     })
                     .catch((err) => {
                         res.json(err);
+                        console.log(req.body);
                         client.end();
                     });
             });
