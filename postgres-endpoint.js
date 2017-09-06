@@ -11,9 +11,9 @@ app.use((req, res, next) => {
     next();
 });
 
-const ListsEndpoint = require('lists-endpoint');
-const ItemsEndpoint = require('items-endpoint');
-const ListItemsEndpoint = require('list-items-endpoint');
+const ListsEndpoint = require('./lists-endpoint');
+const ItemsEndpoint = require('./items-endpoint');
+const ListItemsEndpoint = require('./list-items-endpoint');
 
 const { Client } = require('pg');
 const client = new Client();
