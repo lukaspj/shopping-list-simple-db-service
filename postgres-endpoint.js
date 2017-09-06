@@ -97,6 +97,23 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                     });
             });
 
+        app.route('/items/delete')
+            .post((req, res) => {
+                var id = req.body.id;
+                const client = new Client();
+                client.connect();
+                client.query(`DELETE FROM items WHERE item_id=${id}`)
+                    .then((dbRes) => {
+                        res.send("success");
+                        client.end();
+                    })
+                    .catch((err) => {
+                        res.json(err);
+                        console.log(req.body);
+                        client.end();
+                    });
+            });
+
         app.route('/lists/create')
             .post((req, res) => {
                 const client = new Client();
