@@ -59,7 +59,7 @@ module.exports = {
                var status = req.body.status;
                const client = new Client();
                client.connect();
-               client.query(`UPDATE lists SET status=${status} WHERE id=${id};`)
+               client.query(`UPDATE lists SET status=${status} WHERE list_id=${id};`)
                    .then(() => {
                         res.send("success");
                         client.end();
@@ -67,7 +67,7 @@ module.exports = {
                    })
                    .catch(err => {
                        res.json(err);
-                       console.log(`UPDATE lists SET status=${status} WHERE id=${id};`);
+                       console.log(`UPDATE lists SET status=${status} WHERE list_id=${id};`);
                        console.log(err);
                        console.log(req.body);
                        client.end();
