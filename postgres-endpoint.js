@@ -87,7 +87,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 client.connect();
                 client.query(`INSERT INTO items VALUES (DEFAULT, '${name}', ${estprice})`)
                     .then((dbRes) => {
-                        res.json(dbRes.rows);
+                        res.send("success");
                         client.end();
                     })
                     .catch((err) => {
@@ -103,7 +103,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 client.connect();
                 client.query(`INSERT INTO lists VALUES (DEFAULT)`)
                     .then((dbRes) => {
-                        res.json(dbRes.rows);
+                        res.send("success");
                         client.end();
                     })
                     .catch((err) => {
@@ -122,7 +122,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 client.connect();
                 client.query(`INSERT INTO list_items VALUES (${list_id}, ${item_id}, ${amount}, '${notes}')`)
                     .then((dbRes) => {
-                        res.json(dbRes.rows);
+                        res.send("success");
                         client.end();
                     })
                     .catch((err) => {
