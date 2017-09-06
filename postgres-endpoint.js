@@ -22,6 +22,7 @@ client.connect();
 
 app.route('/reset')
     .get((req, res) =>{
+        const client = new Client();
         client.query(`
               DROP TABLE items;
               DROP TABLE lists;
@@ -43,7 +44,10 @@ app.route('/reset')
                 amount numeric,
                 notes text
               )`)
-            .then(res.send("OK"));
+            .then(() => {
+                client.end();
+                res.send("OK");
+            });
     });
 
 client.query(`CREATE TABLE IF NOT EXISTS items (
