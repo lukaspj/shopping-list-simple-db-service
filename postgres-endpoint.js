@@ -20,6 +20,32 @@ const client = new Client();
 
 client.connect();
 
+app.route('/reset')
+    .get((req, res) =>{
+        client.query(`
+              DROP TABLE items;
+              DROP TABLE lists;
+              DROP TABLE list_items;
+              CREATE TABLE IF NOT EXISTS items (
+                item_id serial,
+                name text,
+                estprice numeric,
+                PRIMARY KEY (item_id)
+              );
+              CREATE TABLE IF NOT EXISTS lists (
+                list_id serial,
+                PRIMARY KEY (list_id)
+              );
+              CREATE TABLE IF NOT EXISTS list_items (
+                list_item_id serial,
+                list_id integer,
+                item_id integer,
+                amount numeric,
+                notes text
+              )`)
+            .then(res.send("OK"));
+    });
+
 client.query(`CREATE TABLE IF NOT EXISTS items (
                 item_id serial,
                 name text,
@@ -31,6 +57,7 @@ client.query(`CREATE TABLE IF NOT EXISTS items (
                 PRIMARY KEY (list_id)
               );
               CREATE TABLE IF NOT EXISTS list_items (
+                list_item_id serial,
                 list_id integer,
                 item_id integer,
                 amount numeric,

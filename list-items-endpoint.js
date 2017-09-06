@@ -34,7 +34,7 @@ module.exports = {
                 var notes = req.body.notes;
                 const client = new Client();
                 client.connect();
-                client.query(`INSERT INTO list_items VALUES (${list_id}, ${item_id}, ${amount}, '${notes}')`)
+                client.query(`INSERT INTO list_items VALUES (DEFAULT, ${list_id}, ${item_id}, ${amount}, '${notes}')`)
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
@@ -51,7 +51,7 @@ module.exports = {
                 var id = req.body.id;
                 const client = new Client();
                 client.connect();
-                client.query(`DELETE FROM list_items WHERE list_id=${id}`)
+                client.query(`DELETE FROM list_items WHERE list_item_id=${id}`)
                     .then((dbRes) => {
                         res.send("success");
                         client.end();
