@@ -67,6 +67,8 @@ module.exports = {
                    })
                    .catch(err => {
                        res.json(err);
+                       console.log(`UPDATE lists SET status=${status} WHERE id=${id};`);
+                       console.log(err);
                        console.log(req.body);
                        client.end();
                        res.end();
