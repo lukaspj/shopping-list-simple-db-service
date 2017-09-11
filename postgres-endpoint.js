@@ -73,6 +73,7 @@ PgHelper.makeQuery(createTablesStmt)
         IngredientsEndpoint.get(app);
         IngredientsEndpoint.create(app);
         IngredientsEndpoint.delete(app);
+        IngredientsEndpoint.update(app);
 
         RecipeIngredientsEndpoint.list(app);
         RecipeIngredientsEndpoint.listFor(app);

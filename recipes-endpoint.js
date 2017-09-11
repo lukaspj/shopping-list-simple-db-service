@@ -46,11 +46,11 @@ module.exports = {
     update: (app) => {
         app.route('/recipes/update')
             .post((req, res) => {
-                var id = req.body.id;
-                var name = req.body.name;
-                var description = req.body.description;
-                var image = req.body.image;
-                var steps = req.body.steps;
+                const id = req.body.id;
+                const name = req.body.name;
+                const description = req.body.description;
+                const image = req.body.image;
+                const steps = req.body.steps;
                 PgHelper.makeQuery(`UPDATE recipes SET
                                         name='${name}', description='${description}',
                                         image='${image}', steps='${steps}'
