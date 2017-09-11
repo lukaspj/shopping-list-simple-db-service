@@ -16,7 +16,7 @@ module.exports = {
             .get((req, res) =>{
                 PgHelper.makeQuery(`SELECT * FROM ingredients WHERE id=${req.params.id};`)
                     .then(dbRes => {
-                        res.json(dbRes.rows);
+                        res.json(dbRes.rows[0]);
                         res.end();
                     });
             });
