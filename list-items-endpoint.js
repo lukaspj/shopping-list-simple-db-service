@@ -1,27 +1,22 @@
-const { Client } = require('pg');
+const PgHelper = require('./pg-helper');
 
 module.exports = {
     list: (app) => {
         app.route('/list_items')
-            .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query('SELECT * FROM list_items')
-                    .then((dbRes) => {
+            .get((req, res) => {
+                PgHelper.makeQuery('SELECT * FROM list_items')
+                    .then(dbRes => {
                         res.json(dbRes.rows);
-                        client.end();
+                        res.end();
                     });
             });
     },
     get: (app) => {
         app.route('/list_items/:id')
             .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query(`SELECT * FROM list_items WHERE list_id = ${req.params.id}`)
-                    .then((dbRes) => {
+                PgHelper.makeQuery(`SELECT * FROM list_items WHERE list_id = ${req.params.id}`)
+                    .then(dbRes => {
                         res.json(dbRes.rows);
-                        client.end();
                         res.end();
                     });
             });
@@ -33,17 +28,9 @@ module.exports = {
                 var item_id = req.body.item_id;
                 var amount = req.body.amount;
                 var notes = req.body.notes;
-                const client = new Client();
-                client.connect();
-                client.query(`INSERT INTO list_items VALUES (DEFAULT, ${list_id}, ${item_id}, ${amount}, '${notes}')`)
-                    .then((dbRes) => {
+                PgHelper.makeQuery(`INSERT INTO list_items VALUES (DEFAULT, ${list_id}, ${item_id}, ${amount}, '${notes}')`)
+                    .then(dbRes => {
                         res.send("success");
-                        client.end();
-                        res.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        client.end();
                         res.end();
                     });
             });
@@ -52,20 +39,21 @@ module.exports = {
         app.route('/list_items/delete')
             .post((req, res) => {
                 var id = req.body.id;
-                const client = new Client();
-                client.connect();
-                client.query(`DELETE FROM list_items WHERE list_item_id=${id}`)
-                    .then((dbRes) => {
+                PgHelper.makeQuery(`DELETE FROM list_items WHERE list_item_id=${id}`)
+                    .then(dbRes => {
                         res.send("success");
-                        client.end();
-                        res.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        console.log(req.body);
-                        client.end();
                         res.end();
                     });
             });
+    },
+    initDBstatement: () => {
+        return `
+            CREATE TABLE IF NOT EXISTS list_items (
+                list_item_id serial,
+                list_id integer,
+                item_id integer,
+                amount numeric,
+                notes text
+            );`;
     }
 };

@@ -14,63 +14,41 @@ app.use((req, res, next) => {
 const ListsEndpoint = require('./lists-endpoint');
 const ItemsEndpoint = require('./items-endpoint');
 const ListItemsEndpoint = require('./list-items-endpoint');
+const RecipesEndpoint = require('./recipes-endpoint');
+const IngredientsEndpoint = require('./ingredients-endpoint');
+const RecipeIngredientsEndpoint = require('./recipe-ingredients-endpoint');
 
-const { Client } = require('pg');
-const client = new Client();
+const PgHelper = require('./pg-helper');
 
-client.connect();
-
-const createTablesStmt = `
-                      CREATE TABLE IF NOT EXISTS items (
-                        item_id serial,
-                        name text,
-                        estprice numeric,
-                        PRIMARY KEY (item_id)
-                      );
-                      CREATE TABLE IF NOT EXISTS lists (
-                        list_id serial,
-                        status integer DEFAULT 0,
-                        PRIMARY KEY (list_id)
-                      );
-                      CREATE TABLE IF NOT EXISTS list_items (
-                        list_item_id serial,
-                        list_id integer,
-                        item_id integer,
-                        amount numeric,
-                        notes text
-                      )`;
+const createTablesStmt = ListsEndpoint.initDBstatement() +
+                         ItemsEndpoint.initDBstatement() +
+                         ListItemsEndpoint.initDBstatement() +
+                         RecipesEndpoint.initDBstatement() +
+                         IngredientsEndpoint.initDBstatement() +
+                         RecipeIngredientsEndpoint.initDBstatement();
 
 app.route('/reset')
-    .get((req, res) =>{
-        const client = new Client();
-        client.connect();
-        client.query(`DROP TABLE items;
-                      DROP TABLE lists;
-                      DROP TABLE list_items;` + createTablesStmt)
-            .then(() => {
-                client.end();
-                res.send('OK');
-            })
-            .catch(err => console.log(err));
+    .get((req, res) => {
+        PgHelper.makeQuery(`
+                    DROP TABLE items;
+                    DROP TABLE lists;
+                    DROP TABLE list_items;
+                    DROP TABLE recipes;
+                    DROP TABLE ingredients;
+                    DROP TABLE recipe_ingredients;` + createTablesStmt)
+            .then(() => res.send('OK'));
     });
 
 app.route('/migrate')
     .get((req, res) => {
-        const client = new Client();
-        client.connect();
-        client.query(`
+        PgHelper.makeQuery(`
             ALTER TABLE lists ADD COLUMN status integer DEFAULT 0;
         `)
-            .then(() => {
-                client.end();
-                res.send('OK');
-            });
+            .then(() => res.send('OK'));
     });
 
-client.query(createTablesStmt)
+PgHelper.makeQuery(createTablesStmt)
     .then(() => {
-        client.end();
-
         ItemsEndpoint.list(app);
         ItemsEndpoint.create(app);
         ItemsEndpoint.delete(app);
@@ -84,6 +62,22 @@ client.query(createTablesStmt)
         ListsEndpoint.create(app);
         ListsEndpoint.delete(app);
         ListsEndpoint.update(app);
+
+        RecipesEndpoint.list(app);
+        RecipesEndpoint.get(app);
+        RecipesEndpoint.create(app);
+        RecipesEndpoint.delete(app);
+        RecipesEndpoint.update(app);
+
+        IngredientsEndpoint.list(app);
+        IngredientsEndpoint.get(app);
+        IngredientsEndpoint.create(app);
+        IngredientsEndpoint.delete(app);
+
+        RecipeIngredientsEndpoint.list(app);
+        RecipeIngredientsEndpoint.listFor(app);
+        RecipeIngredientsEndpoint.create(app);
+        RecipeIngredientsEndpoint.delete(app);
 
         app.listen(port);
 

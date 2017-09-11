@@ -1,15 +1,13 @@
-const { Client } = require('pg');
+const PgHelper = require('./pg-helper');
 
 module.exports = {
     list: (app) => {
         app.route('/items')
             .get((req, res) =>{
-                const client = new Client();
-                client.connect();
-                client.query('SELECT * FROM items')
-                    .then((dbRes) => {
+                PgHelper.makeQuery('SELECT * FROM items')
+                    .then(dbRes => {
+                        res.send(JSON.stringify(dbRes));
                         res.json(dbRes.rows);
-                        client.end();
                         res.end();
                     });
             });
@@ -19,18 +17,9 @@ module.exports = {
             .post((req, res) => {
                 var name = req.body.name;
                 var estprice = req.body.estprice;
-                const client = new Client();
-                client.connect();
-                client.query(`INSERT INTO items VALUES (DEFAULT, '${name}', ${estprice})`)
-                    .then((dbRes) => {
+                PgHelper.makeQuery(`INSERT INTO items VALUES (DEFAULT, '${name}', ${estprice})`)
+                    .then(dbRes => {
                         res.send("success");
-                        client.end();
-                        res.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        console.log(req.body);
-                        client.end();
                         res.end();
                     });
             });
@@ -39,20 +28,20 @@ module.exports = {
         app.route('/items/delete')
             .post((req, res) => {
                 var id = req.body.id;
-                const client = new Client();
-                client.connect();
-                client.query(`DELETE FROM items WHERE item_id=${id}`)
-                    .then((dbRes) => {
+                PgHelper.makeQuery(`DELETE FROM items WHERE item_id=${id}`)
+                    .then(dbRes => {
                         res.send("success");
-                        client.end();
-                        res.end();
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                        console.log(req.body);
-                        client.end();
                         res.end();
                     });
             });
+    },
+    initDBstatement: () => {
+        return `
+          CREATE TABLE IF NOT EXISTS items (
+            item_id serial,
+            name text,
+            estprice numeric,
+            PRIMARY KEY (item_id)
+          );`
     }
 };
