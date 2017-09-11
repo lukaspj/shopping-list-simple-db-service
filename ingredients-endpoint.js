@@ -29,7 +29,7 @@ module.exports = {
                 const image = req.body.image;
                 const estprice = req.body.estprice;
                 PgHelper.makeQuery(`INSERT INTO ingredients (name, description, image, estprice) 
-                                                VALUES ('${name}', ${description}, ${image}, ${estprice});`)
+                                                VALUES ('${name}', '${description}', '${image}', ${estprice});`)
                     .then(dbRes => {
                         res.send("success");
                         res.end();
@@ -56,8 +56,8 @@ module.exports = {
                 var image = req.body.image;
                 var estprice = req.body.estprice;
                 PgHelper.makeQuery(`UPDATE ingredients SET 
-                                        name=${name}, description=${description},
-                                        image=${image}, estprice=${estprice}
+                                        name='${name}', description='${description}',
+                                        image='${image}', estprice=${estprice}
                                         WHERE id=${id};`)
                     .then(dbRes => {
                         res.send("success");
