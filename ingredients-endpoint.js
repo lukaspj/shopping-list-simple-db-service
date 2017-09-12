@@ -4,6 +4,7 @@ module.exports = {
     list: (app) => {
         app.route('/ingredients')
             .get((req, res) =>{
+                console.log('/ingredients: ' + JSON.stringify(req.body));
                 PgHelper.makeQuery('SELECT * FROM ingredients;')
                     .then(dbRes => {
                         res.json(dbRes.rows);
@@ -14,6 +15,7 @@ module.exports = {
     get: (app) => {
         app.route('/ingredients/:id')
             .get((req, res) =>{
+                console.log('/ingredients/:id: ' + JSON.stringify(req.body));
                 PgHelper.makeQuery(`SELECT * FROM ingredients WHERE id=${req.params.id};`)
                     .then(dbRes => {
                         res.json(dbRes.rows[0]);
@@ -24,6 +26,7 @@ module.exports = {
     create: (app) => {
         app.route('/ingredients/create')
             .post((req, res) => {
+                console.log('/ingredients/create: ' + JSON.stringify(req.body));
                 const name = req.body.name;
                 const description = req.body.description;
                 const image = req.body.image;
@@ -39,6 +42,7 @@ module.exports = {
     delete: (app) => {
         app.route('/ingredients/delete')
             .post((req, res) => {
+                console.log('/ingredients/delete: ' + JSON.stringify(req.body));
                 var id = req.body.id;
                 PgHelper.makeQuery(`DELETE FROM ingredients WHERE id=${id}`)
                     .then(dbRes => {
@@ -50,6 +54,7 @@ module.exports = {
     update: (app) => {
         app.route('/ingredients/update')
             .post((req, res) => {
+                console.log('/ingredients/update: ' + JSON.stringify(req.body));
                 const id = req.body.id;
                 const name = req.body.name;
                 const description = req.body.description;
