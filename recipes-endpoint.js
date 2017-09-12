@@ -25,7 +25,11 @@ module.exports = {
         app.route('/recipes/create')
             .post((req, res) => {
                 var name = req.body.name;
-                PgHelper.makeQuery(`INSERT INTO recipes (name) VALUES ('${name}');`)
+                const description = req.body.description;
+                const image = req.body.image;
+                const steps = req.body.steps;
+                PgHelper.makeQuery(`INSERT INTO recipes (name, description, image, steps) 
+                                            VALUES ('${name}', '${description}', '${image}', '${steps}');`)
                     .then(dbRes => {
                         res.send("success");
                         res.end();
