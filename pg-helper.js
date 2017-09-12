@@ -5,6 +5,9 @@ module.exports = {
         return new Promise((resolve, reject) => {
             const client = new Client();
             client.connect();
+            console.log("Doing query:");
+            console.log(query);
+
             client.query(query)
                 .then(dbRes => {
                     client.end();
