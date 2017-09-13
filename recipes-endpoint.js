@@ -29,7 +29,8 @@ module.exports = {
                 const image = req.body.image;
                 const steps = req.body.steps;
                 PgHelper.makeQuery(`INSERT INTO recipes (name, description, image, steps) 
-                                            VALUES ($1, $2, $3, $4);`, [name, description, image, steps])
+                                            VALUES ($1, $2, $3, $4)
+                                            RETURNING *;`, [name, description, image, steps])
                     .then(dbRes => {
                         res.json(dbRes.rows[0]);
                         res.end();
