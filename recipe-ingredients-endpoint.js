@@ -28,7 +28,7 @@ module.exports = {
                 const ingredient_id = req.body.ingredient_id;
                 const unit = req.body.unit;
                 const amount = req.body.amount;
-                PgHelper.makeQuery(`INSERT INTO recipe_ingredients VALUES ($1, $2, $3, $4);`, [recipe_id, ingredient_id, unit, amount])
+                PgHelper.makeQuery(`INSERT INTO recipe_ingredients VALUES ($1, $2, $3, $4);`, [recipe_id, ingredient_id, amount, unit])
                     .then(dbRes => {
                         res.json(dbRes);
                         res.end();
