@@ -28,7 +28,7 @@ module.exports = {
                 var ingredient_id = req.body.ingredient_id;
                 PgHelper.makeQuery(`INSERT INTO recipe_ingredients VALUES ('${recipe_id}', ${ingredient_id});`)
                     .then(dbRes => {
-                        res.send("success");
+                        res.json(dbRes);
                         res.end();
                     });
             });
@@ -40,7 +40,7 @@ module.exports = {
                 var ingredient_id = req.body.ingredient_id;
                 PgHelper.makeQuery(`DELETE FROM recipe_ingredients WHERE recipe_id=${recipe_id} AND ingredient_id=${ingredient_id};`)
                     .then(dbRes => {
-                        res.send("success");
+                        res.send(dbRes.rowsAffected);
                         res.end();
                     });
             });
@@ -48,8 +48,10 @@ module.exports = {
     initDBstatement: () => {
         return `
           CREATE TABLE IF NOT EXISTS recipe_ingredients (
-            recipe_id integer NOT NULL,
-            ingredient_id integer NOT NULL,
+            recipe_id INTEGER NOT NULL,
+            ingredient_id INTEGER NOT NULL,
+            amount NUMERIC NOT NULL,
+            unit INTEGER,
             FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE,
             FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT,
             PRIMARY KEY (recipe_id)
