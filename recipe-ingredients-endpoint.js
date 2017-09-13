@@ -55,8 +55,7 @@ module.exports = {
             amount NUMERIC NOT NULL,
             unit TEXT,
             FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE,
-            FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT,
-            PRIMARY KEY (recipe_id)
+            FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT
           );`
     }
 };
