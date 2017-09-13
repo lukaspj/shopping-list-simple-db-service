@@ -11,6 +11,16 @@ module.exports = {
                     });
             });
     },
+    latest: (app) => {
+        app.route('/recipes/:limit')
+            .get((req, res) => {
+                PgHelper.makeQuery('SELECT * FROM recipes ORDER BY created_at DESC LIMIT $1;', [req.params.limit])
+                    .then(dbRes => {
+                        res.json(dbRes.rows);
+                        res.end();
+                    });
+            });
+    },
     get: (app) => {
         app.route('/recipes/:id')
             .get((req, res) =>{
