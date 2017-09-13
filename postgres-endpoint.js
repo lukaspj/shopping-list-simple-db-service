@@ -42,7 +42,7 @@ app.route('/reset')
 app.route('/migrate')
     .get((req, res) => {
         PgHelper.makeQuery(`
-            ALTER TABLE lists ADD COLUMN status integer DEFAULT 0;
+            ALTER TABLE recipe_ingredients ALTER COLUMN unit TYPE text;
         `)
             .then(() => res.send('OK'));
     });

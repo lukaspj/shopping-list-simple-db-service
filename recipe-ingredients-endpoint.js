@@ -53,7 +53,7 @@ module.exports = {
             recipe_id INTEGER NOT NULL,
             ingredient_id INTEGER NOT NULL,
             amount NUMERIC NOT NULL,
-            unit INTEGER,
+            unit TEXT,
             FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE,
             FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT,
             PRIMARY KEY (recipe_id)
