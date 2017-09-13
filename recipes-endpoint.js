@@ -61,8 +61,8 @@ module.exports = {
                 const image = req.body.image;
                 const steps = req.body.steps;
                 PgHelper.makeQuery(`UPDATE recipes SET
-                                        name='$1', description='$2',
-                                        image='$3', steps='$4'
+                                        name=$1, description=$2,
+                                        image=$3, steps=$4
                                         WHERE id=$5;`, [name, description, image, steps, id])
                     .then(dbRes => {
                         res.send("success");
