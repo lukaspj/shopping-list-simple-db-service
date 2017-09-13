@@ -42,7 +42,7 @@ app.route('/reset')
 app.route('/migrate')
     .get((req, res) => {
         PgHelper.makeQuery(`
-            ALTER TABLE recipe_ingredients DROP CONSTRAINT recipe_id_pkey;
+            ALTER TABLE recipe_ingredients DROP CONSTRAINT recipe_ingredients_pkey;
         `)
             .then(() => res.send('OK'));
     });
