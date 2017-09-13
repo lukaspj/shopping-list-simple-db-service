@@ -6,7 +6,7 @@ module.exports = {
             .get((req, res) =>{
                 PgHelper.makeQuery('SELECT * FROM recipe_ingredients;')
                     .then(dbRes => {
-                        res.json(dbRes.rows);
+                        res.json(dbRes.rows.map(row => {row.amount = parseFloat(row.amount); return row;}));
                         res.end();
                     });
             });
@@ -16,7 +16,7 @@ module.exports = {
             .get((req, res) =>{
                 PgHelper.makeQuery(`SELECT * FROM recipe_ingredients WHERE recipe_id=$1;`, [req.params.id])
                     .then(dbRes => {
-                        res.json(dbRes.rows);
+                        res.json(dbRes.rows.map(row => {row.amount = parseFloat(row.amount); return row;}));
                         res.end();
                     });
             });
