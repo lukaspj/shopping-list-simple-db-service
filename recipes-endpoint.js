@@ -14,7 +14,7 @@ module.exports = {
     get: (app) => {
         app.route('/recipes/:id')
             .get((req, res) =>{
-                PgHelper.makeQuery(`SELECT * FROM recipes WHERE id=${req.params.id};`)
+                PgHelper.makeQuery('SELECT * FROM recipes WHERE id=$1;', [req.params.id])
                     .then(dbRes => {
                         res.json(dbRes.rows[0]);
                         res.end();
@@ -29,9 +29,9 @@ module.exports = {
                 const image = req.body.image;
                 const steps = req.body.steps;
                 PgHelper.makeQuery(`INSERT INTO recipes (name, description, image, steps) 
-                                            VALUES ('${name}', '${description}', '${image}', '${steps}');`)
+                                            VALUES ($1, $2, $3, $4);`, [name, description, image, steps])
                     .then(dbRes => {
-                        res.send("success");
+                        res.json(dbRes.rows[0]);
                         res.end();
                     });
             });
@@ -40,9 +40,9 @@ module.exports = {
         app.route('/recipes/delete')
             .post((req, res) => {
                 var id = req.body.id;
-                PgHelper.makeQuery(`DELETE FROM recipes WHERE id=${id};`)
+                PgHelper.makeQuery(`DELETE FROM recipes WHERE id=$1;`, [id])
                     .then(dbRes => {
-                        res.send("success");
+                        res.json(dbRes);
                         res.end();
                     });
             });
@@ -56,9 +56,9 @@ module.exports = {
                 const image = req.body.image;
                 const steps = req.body.steps;
                 PgHelper.makeQuery(`UPDATE recipes SET
-                                        name='${name}', description='${description}',
-                                        image='${image}', steps='${steps}'
-                                        WHERE id=${id};`)
+                                        name='$1', description='$2',
+                                        image='$3', steps='$4'
+                                        WHERE id=$5;`, [name, description, image, steps, id])
                     .then(dbRes => {
                         res.send("success");
                         res.end();
