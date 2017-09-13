@@ -47,6 +47,23 @@ module.exports = {
                     });
             });
     },
+    update: (app) => {
+        app.route('/recipe_ingredients/update')
+            .post((req, res) => {
+                const recipe_id = req.body.recipe_id;
+                const ingredient_id = req.body.ingredient_id;
+                const unit = req.body.unit;
+                const amount = req.body.amount;
+                PgHelper.makeQuery(`UPDATE recipe_ingredients 
+                                            SET amount=$1, unit=$2
+                                            WHERE recipe_id=$3 AND ingredient_id=$4;`,
+                                        [amount, unit, recipe_id, ingredient_id])
+                    .then(dbRes => {
+                        res.send(dbRes.rowsAffected);
+                        res.end();
+                    });
+            });
+    },
     initDBstatement: () => {
         return `
           CREATE TABLE IF NOT EXISTS recipe_ingredients (
