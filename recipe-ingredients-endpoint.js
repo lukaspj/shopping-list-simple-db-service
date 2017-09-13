@@ -14,7 +14,7 @@ module.exports = {
     listFor: (app) => {
         app.route('/recipe_ingredients/:id')
             .get((req, res) =>{
-                PgHelper.makeQuery(`SELECT * FROM recipe_ingredients WHERE $1;`, [req.params.id])
+                PgHelper.makeQuery(`SELECT * FROM recipe_ingredients WHERE recipe_id=$1;`, [req.params.id])
                     .then(dbRes => {
                         res.json(dbRes.rows);
                         res.end();
