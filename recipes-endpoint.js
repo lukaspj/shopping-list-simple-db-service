@@ -12,7 +12,7 @@ module.exports = {
             });
     },
     latest: (app) => {
-        app.route('/recipes/:limit')
+        app.route('/recipes/latest/:limit')
             .get((req, res) => {
                 PgHelper.makeQuery('SELECT * FROM recipes ORDER BY created_at DESC LIMIT $1;', [req.params.limit])
                     .then(dbRes => {
