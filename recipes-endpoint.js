@@ -34,6 +34,10 @@ module.exports = {
                     .then(dbRes => {
                         res.json(dbRes.rows[0]);
                         res.end();
+                    })
+                    .catch(err =>{
+                        res.json(err);
+                        res.end();
                     });
             });
     },
