@@ -33,9 +33,9 @@ app.route('/reset')
                     DROP TABLE items;
                     DROP TABLE lists;
                     DROP TABLE list_items;
-                    DROP TABLE recipes;
+                    DROP TABLE recipe_ingredients;
                     DROP TABLE ingredients;
-                    DROP TABLE recipe_ingredients;` + createTablesStmt)
+                    DROP TABLE recipes;` + createTablesStmt)
             .then(() => res.send('OK'));
     });
 
